@@ -30,7 +30,6 @@ namespace FTP
             try
             {
                 IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
-                localIp = localIPs[2];
                 for (int i = 0; i < localIPs.Length; i++)
                 {
                     var test = localIPs[i].ToString();
