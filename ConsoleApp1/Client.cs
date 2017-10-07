@@ -23,14 +23,14 @@ namespace FTP
         private Regex returnCode = new Regex(@"^\d{3}\s");
         private Regex pasvPort = new Regex(@"\(\d{1,3},\d{1,3},\d{1,3},\d{1,3},\d{1,3},\d{1,3}\)");
 
-        public Client(String host)
+        public Client(String host, int port)
         {
             serverHostname = host;
             try
             {
                 IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
                 localIp = localIPs[2];
-                client = new TcpClient(serverHostname, 21);
+                client = new TcpClient(serverHostname, (port == 0) ? 21 : port);
                 reader = new StreamReader(client.GetStream());
                 Reader();
                 writer = new StreamWriter(client.GetStream());
@@ -204,43 +204,50 @@ namespace FTP
             }
             else
             {
-                TcpListener dataListener = new TcpListener(IPAddress.Any, 0);
-                dataListener.Start();
-                int port = ((IPEndPoint)dataListener.LocalEndpoint).Port;
-                byte[] local = localIp.GetAddressBytes();
-                string hostPort = "";
-                for (int i = 0; i < 4; i++)
+                try
                 {
-                    hostPort += local[i] + ",";
-                }
-                hostPort += (port - (port % 256)) / 256 + "," + port % 256;
-                if (debug) { Console.WriteLine("Send: PORT " + hostPort); }
-                writer.WriteLine("PORT " + hostPort);
-                writer.Flush();
-                status = reader.ReadLine();
-                Console.WriteLine(status);
-                if (status.Substring(0, 1) == "2")
-                {
-                    TcpClient dataClient = dataListener.AcceptTcpClient();
-                    StreamReader dataReader = new StreamReader(dataClient.GetStream());
-                    StreamWriter dataWriter = new StreamWriter(dataClient.GetStream());
-                    Console.WriteLine(dataReader.ReadLine());
-                    if (debug) { Console.WriteLine("Send: " + cmd); }
-                    dataWriter.Write(cmd);
-                    dataWriter.Flush();
-                    Console.WriteLine(reader.ReadLine());
-                    String line;
-                    do
+                    TcpListener dataListener = new TcpListener(IPAddress.Any, 0);
+                    dataListener.Start();
+                    int port = ((IPEndPoint)dataListener.LocalEndpoint).Port;
+                    byte[] local = localIp.GetAddressBytes();
+                    string hostPort = "";
+                    for (int i = 0; i < 4; i++)
                     {
-                        line = dataReader.ReadLine();
-                        Console.WriteLine(line);
-                    } while (!line.Split()[0].StartsWith('2'));
+                        hostPort += local[i] + ",";
+                    }
+                    hostPort += (port - (port % 256)) / 256 + "," + port % 256;
+                    if (debug) { Console.WriteLine("Send: PORT " + hostPort); }
+                    writer.WriteLine("PORT " + hostPort);
+                    writer.Flush();
+                    status = reader.ReadLine();
+                    Console.WriteLine(status);
+                    if (status.Substring(0, 1) == "2")
+                    {
+                        TcpClient dataClient = dataListener.AcceptTcpClient();
+                        StreamReader dataReader = new StreamReader(dataClient.GetStream());
+                        StreamWriter dataWriter = new StreamWriter(dataClient.GetStream());
+                        Console.WriteLine(dataReader.ReadLine());
+                        if (debug) { Console.WriteLine("Send: " + cmd); }
+                        dataWriter.Write(cmd);
+                        dataWriter.Flush();
+                        Console.WriteLine(reader.ReadLine());
+                        String line;
+                        do
+                        {
+                            line = dataReader.ReadLine();
+                            Console.WriteLine(line);
+                        } while (!line.Split()[0].StartsWith('2'));
+                    }
+                    else
+                    {
+                        Console.Error.Write("Error:  " + status);
+                    }
                 }
-                else
+                catch(Exception e)
                 {
-                    Console.Error.Write("Error:  ");
-                    Console.Error.WriteLine(status);
+                    Console.WriteLine("Error: " + e.Message);
                 }
+                
             }
 
         }
@@ -278,7 +285,12 @@ namespace FTP
             Console.WriteLine("Transfer Complete!");
         }
 
-
+        public void Close()
+        {
+            reader.Close();
+            writer.Close();
+            client.Close();
+        }
 
     }
 }

@@ -70,12 +70,17 @@ namespace FTP
                 Console.Error.WriteLine("Usage: FTP serverHostname");
                 Environment.Exit(1);
             }
-            else if (args.Length == 2)
+            int port = 0;
+            try
             {
-
+                port = (args.Length == 2) ? int.Parse(args[1]) : 0;
             }
-            Client client = new Client(args[0]);
-
+            catch (Exception e)
+            {
+                Console.Error.WriteLine("Error: Invalid port");
+                Environment.Exit(-1);
+            }
+            Client client = new Client(args[0], port);
             client.Login();
 
             do
@@ -154,6 +159,7 @@ namespace FTP
                             break;
 
                         case QUIT:
+                            client.Close();
                             eof = true;
                             break;
 
