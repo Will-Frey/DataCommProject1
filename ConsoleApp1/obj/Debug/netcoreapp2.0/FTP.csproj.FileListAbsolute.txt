@@ -1,0 +1,11 @@
+C:\Users\Will\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp2.0\FTP.deps.json
+C:\Users\Will\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp2.0\FTP.runtimeconfig.json
+C:\Users\Will\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp2.0\FTP.runtimeconfig.dev.json
+C:\Users\Will\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp2.0\FTP.dll
+C:\Users\Will\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp2.0\FTP.pdb
+C:\Users\Will\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\netcoreapp2.0\FTP.csprojResolveAssemblyReference.cache
+C:\Users\Will\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\netcoreapp2.0\FTP.csproj.CoreCompileInputs.cache
+C:\Users\Will\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\netcoreapp2.0\FTP.AssemblyInfoInputs.cache
+C:\Users\Will\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\netcoreapp2.0\FTP.AssemblyInfo.cs
+C:\Users\Will\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\netcoreapp2.0\FTP.dll
+C:\Users\Will\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\netcoreapp2.0\FTP.pdb
