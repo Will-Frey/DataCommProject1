@@ -22,6 +22,7 @@ namespace FTP
         private char mode = 'I';
         private Regex returnCode = new Regex(@"^\d{3}\s");
         private Regex pasvPort = new Regex(@"\(\d{1,3},\d{1,3},\d{1,3},\d{1,3},\d{1,3},\d{1,3}\)");
+        private Regex ipv4 = new Regex(@"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
 
         public Client(String host, int port)
         {
@@ -30,6 +31,14 @@ namespace FTP
             {
                 IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
                 localIp = localIPs[2];
+                for (int i = 0; i < localIPs.Length; i++)
+                {
+                    var test = localIPs[i].ToString();
+                    if (ipv4.IsMatch(test))
+                    {
+                        localIp = localIPs[i];
+                    }
+                }
                 client = new TcpClient(serverHostname, (port == 0) ? 21 : port);
                 reader = new StreamReader(client.GetStream());
                 Reader();
